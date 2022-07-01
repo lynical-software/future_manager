@@ -6,13 +6,13 @@ class FutureManagerProvider extends InheritedWidget {
   const FutureManagerProvider({
     Key? key,
     required Widget child,
-    this.managerLoadingBuilder,
+    this.loadingBuilder,
     this.errorBuilder,
     this.onFutureManagerError,
   }) : super(child: child, key: key);
 
   ///Loading widget use in [Manager] builder class
-  final Widget? managerLoadingBuilder;
+  final Widget Function()? loadingBuilder;
 
   ///Error widget use in [Manager] builder class
   final ManagerErrorBuilder? errorBuilder;

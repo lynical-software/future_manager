@@ -64,6 +64,7 @@ class ManagerRef extends _ManagerDisposable {
           throw ("Please provide a param when you first time read a ManagerProvider.family");
         }
         return provider.isFamily
+            // ignore: null_check_on_nullable_type_parameter
             ? provider._createFamily!(this, provider._param!)
             : provider._create!(this);
       }();

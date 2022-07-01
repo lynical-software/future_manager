@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 typedef FutureFunction<T> = Future<T> Function();
 typedef SuccessCallBack<T> = FutureOr<T> Function(T);
 typedef ErrorCallBack = void Function(FutureManagerError);
-typedef ManagerProcessListener<T> = void Function(ManagerProcessState, T?);
+typedef ManagerProcessListener<T> = void Function(ProcessState, T?);
 //
 typedef OnManagerError = void Function(FutureManagerError, BuildContext);
 typedef ManagerErrorBuilder = Widget Function(
@@ -20,14 +20,14 @@ Widget _emptyErrorFn(_) {
 const EmptyErrorFunction = _emptyErrorFn;
 
 ///A state that control the state of our manager's UI
-enum ManagerViewState {
+enum ViewState {
   loading,
   ready,
   error,
 }
 
 ///A state that indicate the state of our manager, doesn't reflect on UI
-enum ManagerProcessState {
+enum ProcessState {
   idle,
   processing,
   ready,

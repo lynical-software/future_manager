@@ -2,7 +2,7 @@
 
 ValueNotifier and ValueListenableBuilder but for asynchronous value.
 
-[![pub package](https://img.shields.io/badge/pub-0.0.1-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
+[![pub package](https://img.shields.io/badge/pub-1.0.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
 
 # Installation
 
@@ -10,7 +10,7 @@ Add this to pubspec.yaml
 
 ```dart
 dependencies:
-  future_manager: ^0.0.1
+  future_manager: ^1.0.0
 ```
 
 ### Use case and motivation:
@@ -22,29 +22,34 @@ FutureManager provides you a solution with mainly focus on 3 main state of Futur
 #### Short example:
 
 ```dart
-//Create a manager
-FutureManager<int> dataManager = FutureManager();
+  FutureManager<int> dataManager = FutureManager();
 
-//define a Future function
-dataManager.execute(() => doingSomeAsyncWorkAndReturnValueAsInt());
+  @override
+  void initState() {
+    dataManager.execute(() => Future.value(2));
+    super.initState();
+  }
 
-//Handle the value
-@override
-Widget(BuildContext context){
-  return FutureManagerBuilder<int>(
+  @override
+  void dispose() {
+    dataManager.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureManagerBuilder<int>(
       futureManager: dataManager,
-      error: (error) => YourErrorWidget(error), //optional
-      loading: YourLoadingWidget(), //optional
-      ready: (context, data){
+      ready: (context, data) {
         return ElevatedButton(
-          child: Text("My data: ${data}"),
-          onPressed: (){
+          child: Text("My data: $data"),
+          onPressed: () {
             dataManager.refresh();
           },
-        ),
-      }
-  );
-}
+        );
+      },
+    );
+  }
 ```
 
 # FutureManager

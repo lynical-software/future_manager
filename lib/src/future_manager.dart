@@ -60,13 +60,13 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   Future<T>? future;
 
   ///View state of Manager that control which Widget to build in FutureManagerBuilder
-  ManagerViewState get viewState => _viewState;
-  ManagerViewState _viewState = ManagerViewState.loading;
+  ViewState get viewState => _viewState;
+  ViewState _viewState = ViewState.loading;
 
-  ///Processing state of Manager. Usually useful for any lister
-  ValueNotifier<ManagerProcessState> get processingState => _processingState;
-  final ValueNotifier<ManagerProcessState> _processingState =
-      ValueNotifier(ManagerProcessState.idle);
+  ///Processing state of Manager. Usually useful for any listener
+  ValueNotifier<ProcessState> get processingState => _processingState;
+  final ValueNotifier<ProcessState> _processingState =
+      ValueNotifier(ProcessState.idle);
 
   ///Manager's data
   T? get data => _data;
@@ -78,8 +78,7 @@ class FutureManager<T extends Object> extends ChangeNotifier {
 
   //A field for checking state of Manager
   bool get isRefreshing =>
-      hasDataOrError &&
-      _processingState.value == ManagerProcessState.processing;
+      hasDataOrError && _processingState.value == ProcessState.processing;
   bool get hasDataOrError => (hasData || hasError);
   bool get hasData => _data != null;
   bool get hasError => _error != null;
@@ -223,16 +222,14 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   }
 
   ///[useMicrotask] param can be use to prevent schedule rebuilt while navigating or rebuilt
-  void _updateManagerViewState(ManagerViewState state,
-      {bool useMicrotask = false}) {
+  void _updateViewState(ViewState state, {bool useMicrotask = false}) {
     if (_disposed) return;
     _viewState = state;
     _notifyListeners(useMicrotask: useMicrotask);
   }
 
   ///Wrap with [microtask] to prevent schedule rebuilt while navigating or rebuilt
-  void _updateManagerProcessState(ManagerProcessState state,
-      {bool useMicrotask = false}) {
+  void _updateProcessState(ProcessState state, {bool useMicrotask = false}) {
     if (_disposed) return;
 
     void update() {
@@ -254,8 +251,7 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   ///return updated [data] result once completed.
   Future<T?> modifyData(FutureOr<T> Function(T?) onChange) async {
     T? data = await onChange(_data);
-    updateData(data);
-    return data;
+    return updateData(data);
   }
 
   ///Update current data in our Manager.
@@ -265,10 +261,8 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     if (data != null) {
       _data = data;
       _error = null;
-      _updateManagerProcessState(ManagerProcessState.ready,
-          useMicrotask: useMicrotask);
-      _updateManagerViewState(ManagerViewState.ready,
-          useMicrotask: useMicrotask);
+      _updateProcessState(ProcessState.ready, useMicrotask: useMicrotask);
+      _updateViewState(ViewState.ready, useMicrotask: useMicrotask);
       _updateLastCacheDuration();
       return data;
     }
@@ -285,14 +279,13 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   ///Only work when ViewState isn't error
   ///Best use case with Pagination when there is an error and you want to clear the error to show loading again
   void clearError() {
-    if (viewState != ManagerViewState.error) {
+    if (viewState != ViewState.error) {
       _error = null;
       _notifyListeners(useMicrotask: false);
     }
   }
 
-  ///Add [error] our current manager, reset current [data] if [updateViewState] to null
-  ///
+  ///Add [error] to manager, show an error widget if [updateViewState] is true
   void addError(
     Object error, {
     bool updateViewState = true,
@@ -304,17 +297,12 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     _error = err;
     if (updateViewState) {
       _data = null;
-      _updateManagerViewState(
-        ManagerViewState.error,
-        useMicrotask: useMicrotask,
-      );
+      _updateProcessState(ProcessState.error, useMicrotask: useMicrotask);
+      _updateViewState(ViewState.error, useMicrotask: useMicrotask);
     } else {
+      _updateProcessState(ProcessState.error, useMicrotask: useMicrotask);
       _notifyListeners(useMicrotask: useMicrotask);
     }
-    _updateManagerProcessState(
-      ManagerProcessState.error,
-      useMicrotask: useMicrotask,
-    );
   }
 
   ///Reset all [data] and [error] to [loading] state if [updateViewState] is true only.
@@ -324,23 +312,18 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     if (updateViewState) {
       _error = null;
       _data = null;
-      _updateManagerViewState(
-        ManagerViewState.loading,
-        useMicrotask: useMicroTask,
-      );
+      _updateProcessState(ProcessState.processing, useMicrotask: useMicroTask);
+      _updateViewState(ViewState.loading, useMicrotask: useMicroTask);
     } else {
+      _updateProcessState(ProcessState.processing, useMicrotask: useMicroTask);
       _notifyListeners(useMicrotask: useMicroTask);
     }
-    _updateManagerProcessState(
-      ManagerProcessState.processing,
-      useMicrotask: useMicroTask,
-    );
   }
 
   @override
   String toString() {
     String logContent =
-        "Data: $_data, Error: $_error, ViewState: $viewState, ProcessState: $processingState";
+        "Data: $_data, Error: $_error, ViewState: $viewState, ProcessState: ${processingState.value}";
     if (_lastCacheDuration != null) {
       logContent +=
           ", cacheDuration: ${DateTime.fromMillisecondsSinceEpoch(_lastCacheDuration!)}";

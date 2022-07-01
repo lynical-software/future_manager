@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
 import 'package:sura_flutter/sura_flutter.dart';
 
-import 'cache_global_manager.dart';
-import 'test_manager_provider.dart';
-import 'test_pagination.dart';
+import 'src/cache_global_manager.dart';
+import 'src/test_manager_provider.dart';
+import 'src/test_pagination.dart';
 
 class MyHomePage extends StatefulWidget {
   final FutureManager<int> Function() dataManager;
@@ -40,19 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
         futureManager: dataManager,
         onRefreshing: () => const RefreshProgressIndicator(),
         loading: const Center(child: CircularProgressIndicator()),
-        error: (err) {
+        error: (error) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(err.toString()),
-                SuraAsyncButton(
-                  fullWidth: false,
-                  onPressed: () {
-                    dataManager.refresh(reloading: false);
-                  },
-                  child: const Text("Refresh"),
+                Text(error.toString()),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  key: const ValueKey("error-refresh"),
+                  onPressed: () => dataManager.refresh(reloading: false),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text("Refresh"),
                 ),
+                // AnimatedBuilder(animation: animation, builder: builder)
               ],
             ),
           );
@@ -133,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const TestManagerProvider(),
               );
             },
-            child: const Text("Manager Provider"),
+            child: const Text("Provider"),
           ),
           const SpaceX(16),
           ElevatedButton(
@@ -143,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 const CacheGlobalManager(),
               );
             },
-            child: const Text("Cache Manager"),
+            child: const Text("Cache"),
           ),
         ],
       ),

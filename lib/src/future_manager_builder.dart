@@ -54,25 +54,22 @@ class _FutureManagerBuilderState<T extends Object>
 
   void processStateListener() {
     if (mounted) {
-      ManagerProcessState state = widget.futureManager.processingState.value;
+      ProcessState state = widget.futureManager.processingState.value;
       switch (state) {
-        case ManagerProcessState.idle:
+        case ProcessState.idle:
           break;
-        case ManagerProcessState.processing:
+        case ProcessState.processing:
           break;
-        case ManagerProcessState.ready:
+        case ProcessState.ready:
           T? data = widget.futureManager.data;
           if (data != null) {
             widget.onData?.call(data);
           }
           break;
-        case ManagerProcessState.error:
-          final error = widget.futureManager.error;
-          if (widget.onError != null) {
-            widget.onError?.call(error!);
-          } else {
-            managerProvider?.onFutureManagerError?.call(error!, context);
-          }
+        case ProcessState.error:
+          final error = widget.futureManager.error!;
+          widget.onError?.call(error);
+          managerProvider?.onFutureManagerError?.call(error, context);
           break;
       }
     }
@@ -128,14 +125,14 @@ class _FutureManagerBuilderState<T extends Object>
 
   Widget _buildWidgetByState() {
     switch (widget.futureManager.viewState) {
-      case ManagerViewState.loading:
+      case ViewState.loading:
         if (widget.loading != null) {
           return widget.loading!;
         }
-        return managerProvider?.managerLoadingBuilder ??
+        return managerProvider?.loadingBuilder?.call() ??
             const Center(child: CircularProgressIndicator());
 
-      case ManagerViewState.error:
+      case ViewState.error:
         final error = widget.futureManager.error!;
         if (widget.error != null) {
           return widget.error!.call(error);
@@ -150,7 +147,7 @@ class _FutureManagerBuilderState<T extends Object>
                 textAlign: TextAlign.center,
               ),
             );
-      case ManagerViewState.ready:
+      case ViewState.ready:
         return widget.ready(context, widget.futureManager.data!);
     }
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:future_manager/future_manager.dart';
-import 'package:future_manager_example/src/home.dart';
+import 'package:future_manager_example/home.dart';
 
 void main() {
   testWidgets('FutureManagerBuilder test all state',
       (WidgetTester tester) async {
-    const twosecond = Duration(seconds: 2);
+    const twoSecond = Duration(seconds: 2);
 
     final FutureManager<int> manager = FutureManager(reloading: true);
 
@@ -16,7 +16,7 @@ void main() {
         home: MyHomePage(dataManager: () => manager),
       ),
     );
-    await tester.pump(twosecond);
+    await tester.pump(twoSecond);
 
     ///Modified value test
     final add = find.byKey(const ValueKey("add"));
@@ -28,10 +28,10 @@ void main() {
     ///Refresh test
     await tester.tap(find.byKey(const ValueKey("refresh")));
     await tester.pump();
-    expect(manager.viewState, ManagerViewState.loading);
+    expect(manager.viewState, ViewState.loading);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text("20"), findsNothing);
-    await tester.pump(twosecond);
+    await tester.pump(twoSecond);
     expect(find.text("10"), findsOneWidget);
 
     //Refresh no reloading test
@@ -42,13 +42,13 @@ void main() {
     //Tap refresh with no reloading
     await tester.tap(find.byKey(const ValueKey("refresh-no-reload")));
     await tester.pump();
-    expect(manager.viewState, ManagerViewState.ready);
-    expect(manager.processingState.value, ManagerProcessState.processing);
+    expect(manager.viewState, ViewState.ready);
+    expect(manager.processingState.value, ProcessState.processing);
     expect(find.text("20"), findsOneWidget);
     expect(find.byType(RefreshProgressIndicator), findsOneWidget);
-    await tester.pumpAndSettle(twosecond);
+    await tester.pumpAndSettle(twoSecond);
     expect(find.text("10"), findsOneWidget);
-    expect(manager.processingState.value, ManagerProcessState.ready);
+    expect(manager.processingState.value, ProcessState.ready);
 
     //Add error test
     await tester.tap(find.byKey(const ValueKey("add-error")));
@@ -63,7 +63,7 @@ void main() {
     await tester.pump();
     expect(find.byType(RefreshProgressIndicator), findsOneWidget);
     expect(find.text("20"), findsNothing);
-    await tester.pump(twosecond);
+    await tester.pump(twoSecond);
     expect(find.text("10"), findsOneWidget);
 
     //Reset

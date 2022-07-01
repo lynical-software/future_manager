@@ -1,6 +1,6 @@
 name: future_manager
 description: ValueNotifier and ValueListenableBuilder but for asynchronous value.
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/lynical-software/future_manager
 
 environment:
