@@ -1,12 +1,35 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'dart:io';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:future_manager/future_manager.dart';
 
+///Find more test at example folder
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  FutureManager<int> futureManager = FutureManager();
+
+  test("Test future manger with value", () async {
+    late int value;
+    await futureManager.execute(() async {
+      await Future.delayed(const Duration(seconds: 2));
+      return 10;
+    }, onSuccess: (data) {
+      value = data;
+      return value;
+    });
+    expect(value, 10);
+  });
+
+  test("Test future manger with error", () async {
+    int? value;
+    await futureManager.execute(() async {
+      await Future.delayed(const Duration(seconds: 2));
+      throw const HttpException("Unable to process");
+    }, onSuccess: (data) {
+      value = data;
+      return value!;
+    });
+    expect(value, null);
+    expect(futureManager.error!.runtimeType, FutureManagerError);
+    expect(futureManager.error!.exception.runtimeType, HttpException);
   });
 }
