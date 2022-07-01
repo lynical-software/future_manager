@@ -65,7 +65,8 @@ class FutureManager<T extends Object> extends ChangeNotifier {
 
   ///Processing state of Manager. Usually useful for any lister
   ValueNotifier<ManagerProcessState> get processingState => _processingState;
-  final ValueNotifier<ManagerProcessState> _processingState = ValueNotifier(ManagerProcessState.idle);
+  final ValueNotifier<ManagerProcessState> _processingState =
+      ValueNotifier(ManagerProcessState.idle);
 
   ///Manager's data
   T? get data => _data;
@@ -76,7 +77,9 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   FutureManagerError? _error;
 
   //A field for checking state of Manager
-  bool get isRefreshing => hasDataOrError && _processingState.value == ManagerProcessState.processing;
+  bool get isRefreshing =>
+      hasDataOrError &&
+      _processingState.value == ManagerProcessState.processing;
   bool get hasDataOrError => (hasData || hasError);
   bool get hasData => _data != null;
   bool get hasError => _error != null;
@@ -124,7 +127,8 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     bool useCache,
   }) refresh = _emptyRefreshFunction;
 
-  Future<T?> _emptyRefreshFunction({reloading, onSuccess, onDone, onError, throwError, useCache}) async {
+  Future<T?> _emptyRefreshFunction(
+      {reloading, onSuccess, onDone, onError, throwError, useCache}) async {
     log("refresh() is depend on execute(),"
         " You need to call execute() once before you can call refresh()");
     return null;
@@ -139,7 +143,13 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     bool throwError = false,
     bool useCache = true,
   }) async {
-    refresh = ({reloading, onSuccess, onDone, onError, throwError = false, useCache = false}) async {
+    refresh = (
+        {reloading,
+        onSuccess,
+        onDone,
+        onError,
+        throwError = false,
+        useCache = false}) async {
       bool shouldReload = reloading ?? this.reloading;
       SuccessCallBack<T>? successCallBack = onSuccess ?? this.onSuccess;
       ErrorCallBack? errorCallBack = onError ?? this.onError;
@@ -195,7 +205,8 @@ class FutureManager<T extends Object> extends ChangeNotifier {
 
     bool lastCacheIsExpired() {
       int now = DateTime.now().millisecondsSinceEpoch;
-      int expiredTime = _lastCacheDuration! + cacheOption.cacheTime.inMilliseconds;
+      int expiredTime =
+          _lastCacheDuration! + cacheOption.cacheTime.inMilliseconds;
       return now > expiredTime;
     }
 
@@ -212,14 +223,16 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   }
 
   ///[useMicrotask] param can be use to prevent schedule rebuilt while navigating or rebuilt
-  void _updateManagerViewState(ManagerViewState state, {bool useMicrotask = false}) {
+  void _updateManagerViewState(ManagerViewState state,
+      {bool useMicrotask = false}) {
     if (_disposed) return;
     _viewState = state;
     _notifyListeners(useMicrotask: useMicrotask);
   }
 
   ///Wrap with [microtask] to prevent schedule rebuilt while navigating or rebuilt
-  void _updateManagerProcessState(ManagerProcessState state, {bool useMicrotask = false}) {
+  void _updateManagerProcessState(ManagerProcessState state,
+      {bool useMicrotask = false}) {
     if (_disposed) return;
 
     void update() {
@@ -252,8 +265,10 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     if (data != null) {
       _data = data;
       _error = null;
-      _updateManagerProcessState(ManagerProcessState.ready, useMicrotask: useMicrotask);
-      _updateManagerViewState(ManagerViewState.ready, useMicrotask: useMicrotask);
+      _updateManagerProcessState(ManagerProcessState.ready,
+          useMicrotask: useMicrotask);
+      _updateManagerViewState(ManagerViewState.ready,
+          useMicrotask: useMicrotask);
       _updateLastCacheDuration();
       return data;
     }
@@ -283,7 +298,9 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     bool updateViewState = true,
     bool useMicrotask = false,
   }) {
-    FutureManagerError err = error is! FutureManagerError ? FutureManagerError(exception: error) : error;
+    FutureManagerError err = error is! FutureManagerError
+        ? FutureManagerError(exception: error)
+        : error;
     _error = err;
     if (updateViewState) {
       _data = null;
@@ -322,9 +339,11 @@ class FutureManager<T extends Object> extends ChangeNotifier {
 
   @override
   String toString() {
-    String logContent = "Data: $_data, Error: $_error, ViewState: $viewState, ProcessState: $processingState";
+    String logContent =
+        "Data: $_data, Error: $_error, ViewState: $viewState, ProcessState: $processingState";
     if (_lastCacheDuration != null) {
-      logContent += ", cacheDuration: ${DateTime.fromMillisecondsSinceEpoch(_lastCacheDuration!)}";
+      logContent +=
+          ", cacheDuration: ${DateTime.fromMillisecondsSinceEpoch(_lastCacheDuration!)}";
     }
     return logContent;
   }

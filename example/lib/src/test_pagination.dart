@@ -8,10 +8,12 @@ import 'package:sura_flutter/sura_flutter.dart';
 
 class SuraManagerWithPagination extends StatefulWidget {
   final FutureManager<int> dataManager;
-  const SuraManagerWithPagination({Key? key, required this.dataManager}) : super(key: key);
+  const SuraManagerWithPagination({Key? key, required this.dataManager})
+      : super(key: key);
 
   @override
-  _SuraManagerWithPaginationState createState() => _SuraManagerWithPaginationState();
+  _SuraManagerWithPaginationState createState() =>
+      _SuraManagerWithPaginationState();
 }
 
 class _SuraManagerWithPaginationState extends State<SuraManagerWithPagination> {
@@ -115,11 +117,17 @@ class UserResponse {
 
   UserResponse({this.pagination, required this.users});
 
-  bool get hasMoreData => pagination != null ? users.length < pagination!.totalItems : false;
+  bool get hasMoreData =>
+      pagination != null ? users.length < pagination!.totalItems : false;
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
-        users: json["data"] == null ? [] : List<UserModel>.from(json["data"].map((x) => UserModel.fromJson(x))),
-        pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
+        users: json["data"] == null
+            ? []
+            : List<UserModel>.from(
+                json["data"].map((x) => UserModel.fromJson(x))),
+        pagination: json["pagination"] == null
+            ? null
+            : Pagination.fromJson(json["pagination"]),
       );
 }
 

@@ -4,7 +4,8 @@ import 'package:future_manager/future_manager.dart';
 import 'package:future_manager_example/src/home.dart';
 
 void main() {
-  testWidgets('FutureManagerBuilder test all state', (WidgetTester tester) async {
+  testWidgets('FutureManagerBuilder test all state',
+      (WidgetTester tester) async {
     const twosecond = Duration(seconds: 2);
 
     final FutureManager<int> manager = FutureManager(reloading: true);

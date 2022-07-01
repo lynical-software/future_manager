@@ -94,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   key: const ValueKey("add-error"),
                   onPressed: () async {
-                    dataManager.addError(const FutureManagerError(exception: "exception"));
+                    dataManager.addError(
+                        const FutureManagerError(exception: "exception"));
                   },
                   child: const Text("Add error"),
                 ),

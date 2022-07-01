@@ -23,7 +23,8 @@ abstract class ManagerConsumer extends StatefulWidget {
   State<ManagerConsumer> createState() => _ManagerConsumerState();
 }
 
-class _ManagerConsumerState extends State<ManagerConsumer> with ManagerProviderMixin {
+class _ManagerConsumerState extends State<ManagerConsumer>
+    with ManagerProviderMixin {
   @override
   Widget build(BuildContext context) {
     return widget.build(context, ref);
@@ -32,7 +33,8 @@ class _ManagerConsumerState extends State<ManagerConsumer> with ManagerProviderM
 
 class ManagerConsumerBuilder extends ManagerConsumer {
   final Widget Function(BuildContext, ManagerRef) builder;
-  const ManagerConsumerBuilder({Key? key, required this.builder}) : super(key: key);
+  const ManagerConsumerBuilder({Key? key, required this.builder})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context, ManagerRef ref) {
@@ -61,7 +63,9 @@ class ManagerRef extends _ManagerDisposable {
         if (provider.isFamily && provider._param == null) {
           throw ("Please provide a param when you first time read a ManagerProvider.family");
         }
-        return provider.isFamily ? provider._createFamily!(this, provider._param!) : provider._create!(this);
+        return provider.isFamily
+            ? provider._createFamily!(this, provider._param!)
+            : provider._create!(this);
       }();
     }
     _providers.add(provider);

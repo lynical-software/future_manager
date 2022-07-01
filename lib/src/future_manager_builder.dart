@@ -40,7 +40,8 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
   _FutureManagerBuilderState createState() => _FutureManagerBuilderState<T>();
 }
 
-class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBuilder<T>> {
+class _FutureManagerBuilderState<T extends Object>
+    extends State<FutureManagerBuilder<T>> {
   //
   FutureManagerProvider? managerProvider;
 
@@ -96,7 +97,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
     super.didUpdateWidget(oldWidget);
     if (widget.futureManager != oldWidget.futureManager) {
       oldWidget.futureManager.removeListener(managerListener);
-      oldWidget.futureManager.processingState.removeListener(processStateListener);
+      oldWidget.futureManager.processingState
+          .removeListener(processStateListener);
       widget.futureManager.addListener(managerListener);
       widget.futureManager.processingState.addListener(processStateListener);
     }
@@ -116,7 +118,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
       alignment: Alignment.topCenter,
       children: [
         managerWidget,
-        if (widget.futureManager.isRefreshing && widget.onRefreshing != null) ...[
+        if (widget.futureManager.isRefreshing &&
+            widget.onRefreshing != null) ...[
           widget.onRefreshing!.call(),
         ],
       ],
@@ -129,7 +132,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
         if (widget.loading != null) {
           return widget.loading!;
         }
-        return managerProvider?.managerLoadingBuilder ?? const Center(child: CircularProgressIndicator());
+        return managerProvider?.managerLoadingBuilder ??
+            const Center(child: CircularProgressIndicator());
 
       case ManagerViewState.error:
         final error = widget.futureManager.error!;
