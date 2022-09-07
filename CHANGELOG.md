@@ -1,4 +1,8 @@
-## [1.0.0+1] - 1 July 2022
+## [1.0.1] - 7 September 2022
+
+- Update pubspec.yaml
+
+## [1.0.0+1] - 25 August 2022
 
 - Update pubspec.yaml
 
