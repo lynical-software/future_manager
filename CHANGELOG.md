@@ -1,3 +1,7 @@
+## [1.1.0] - 15 November 2022
+
+- add `build` method to FutureManager
+
 ## [1.0.1] - 7 September 2022
 
 - Update pubspec.yaml

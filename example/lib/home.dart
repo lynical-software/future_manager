@@ -34,7 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
     //Use with FutureManagerBuilder
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FutureManager example"),
+        title: dataManager.build((data) {
+          return Text("FutureManager example: ${data ?? ""}");
+        }),
       ),
       body: FutureManagerBuilder<int>(
         futureManager: dataManager,

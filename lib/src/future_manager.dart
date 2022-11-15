@@ -87,6 +87,7 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   //Cache option
   int? _lastCacheDuration;
 
+  ///Short method for FutureManagerBuilder
   Widget when({
     required Widget Function(T) ready,
     Widget? loading,
@@ -100,7 +101,8 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     );
   }
 
-  ///Similar to [when] but Only listen and display [data]. Default to Display blank when there is [loading] and [error] But can still customize
+  ///Similar to [when] but Only listen and display [data].
+  ///Default to Display blank when there is [loading] and [error] But can still customize
   Widget listen({
     required Widget Function(T) ready,
     Widget loading = const SizedBox(),
@@ -111,6 +113,16 @@ class FutureManager<T extends Object> extends ChangeNotifier {
       ready: (context, data) => ready(data),
       loading: loading,
       error: error,
+    );
+  }
+
+  ///Always build the child and listen
+  Widget build(Widget Function(T?) builder) {
+    return AnimatedBuilder(
+      animation: this,
+      builder: (context, child) {
+        return builder(data);
+      },
     );
   }
 

@@ -64,7 +64,7 @@ class _TestManagerProviderState extends State<TestManagerProvider>
                       onPressed: () {
                         ref.read(provider).modifyData((p0) => p0! + 30);
                       },
-                      child: const Text("Update"),
+                      child: const Text("Add 30"),
                     ),
                   ),
                 );
@@ -88,7 +88,7 @@ class StatelessManagerStore extends ManagerConsumer {
       child: ref.read(provider).listen(
         ready: (data) {
           return ElevatedButton(
-            child: Text("$data"),
+            child: Text("This Button is in another file: $data"),
             onPressed: () {
               ref.read(provider).modifyData((data) => data! + 10);
             },

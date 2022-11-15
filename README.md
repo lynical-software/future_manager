@@ -2,7 +2,7 @@
 
 ValueNotifier and ValueListenableBuilder but for asynchronous value.
 
-[![pub package](https://img.shields.io/badge/pub-1.0.1-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
+[![pub package](https://img.shields.io/badge/pub-1.1.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
 
 # Installation
 
@@ -10,7 +10,7 @@ Add this to pubspec.yaml
 
 ```dart
 dependencies:
-  future_manager: ^1.0.1
+  future_manager: ^1.1.0
 ```
 
 ### Use case and motivation:
@@ -57,7 +57,7 @@ FutureManager provides you a solution with mainly focus on 3 main state of Futur
 | Property       | description                                                                                    | default |
 | -------------- | ---------------------------------------------------------------------------------------------- | ------- |
 | futureFunction | a function to run and return data                                                              | null    |
-| reloading      | Reset a state to loading or not when you call refresh or execute                        | true    |
+| reloading      | Reset a state to loading or not when you call refresh or execute                               | true    |
 | onSuccess      | a callback function called after operation is success                                          | null    |
 | onDone         | a callback function called after operation is completely done, similar to finally in try-catch | null    |
 | onError        | a callback function called after operation has an error                                        | null    |
@@ -72,16 +72,16 @@ FutureManager provides you a solution with mainly focus on 3 main state of Futur
 | future       | future field of the current futureFunction |
 | isRefreshing | check if our Manager is refreshing         |
 
-| Method         | description                                                                                                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| when           | A method similar to FutureManagerBuilder                                                                                                                            |
-| execute | run futureFunction that will return a data to our Manager                                                                                                           |
-| refresh        | call the execute again. we have to assign futureFunction from the constructor or call execute once to run this method, otherwise it will log an error |
-| updateData     | a method to update data in our Manager                                                                                                                              |
-| modifyData     | a method to update data in our Manager with data callback, prefer using this method to update data.                                                                 |
-| resetData      | reset everything to loading or null state                                                                                                                            |
-| addError       | add error into our manager                                                                                                                                          |
-| clearError     | clear error in the manager but only work if ViewState isn't in error state                                                                                          |
+| Method     | description                                                                                                                                           |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| when       | A method similar to FutureManagerBuilder                                                                                                              |
+| execute    | run futureFunction that will return a data to our Manager                                                                                             |
+| refresh    | call the execute again. we have to assign futureFunction from the constructor or call execute once to run this method, otherwise it will log an error |
+| updateData | a method to update data in our Manager                                                                                                                |
+| modifyData | a method to update data in our Manager with data callback, prefer using this method to update data.                                                   |
+| resetData  | reset everything to loading or null state                                                                                                             |
+| addError   | add error into our manager                                                                                                                            |
+| clearError | clear error in the manager but only work if ViewState isn't in error state                                                                            |
 
 # FutureManagerBuilder
 
