@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
-import 'package:sura_flutter/sura_flutter.dart';
+import 'package:skadi/skadi.dart';
 
 final provider = ManagerProvider((ref) {
   ref.onDispose(() {
@@ -53,7 +53,7 @@ class _TestManagerProviderState extends State<TestManagerProvider>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          SuraPageNavigator.push(
+          SkadiNavigator.push(
             context,
             ManagerConsumerBuilder(
               builder: (context, ref) {

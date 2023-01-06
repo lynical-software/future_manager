@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
-import 'package:sura_flutter/sura_flutter.dart';
+import 'package:skadi/skadi.dart';
 
 import 'src/cache_global_manager.dart';
 import 'src/test_manager_provider.dart';
@@ -17,16 +17,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late FutureManager<int> dataManager = widget.dataManager();
 
+  void listener() {
+    infoLog(dataManager.toString());
+  }
+
   @override
   void initState() {
     dataManager.execute(() async {
       await Future.delayed(const Duration(milliseconds: 1500));
       return 10;
     });
-    dataManager.addListener(() {
-      infoLog(dataManager.toString());
-    });
+    dataManager.addListener(listener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    dataManager.removeListener(listener);
+    super.dispose();
   }
 
   @override
@@ -40,6 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: FutureManagerBuilder<int>(
         futureManager: dataManager,
+        onReadyOnce: (data) {
+          infoLog("This called only once");
+        },
         onRefreshing: () => const RefreshProgressIndicator(),
         loading: const Center(child: CircularProgressIndicator()),
         error: (error) {
@@ -119,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           ElevatedButton(
             onPressed: () {
-              SuraPageNavigator.push(
+              SkadiNavigator.push(
                 context,
                 SuraManagerWithPagination(
                   dataManager: dataManager,
@@ -131,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const SpaceX(16),
           ElevatedButton(
             onPressed: () {
-              SuraPageNavigator.push(
+              SkadiNavigator.push(
                 context,
                 const TestManagerProvider(),
               );
@@ -141,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const SpaceX(16),
           ElevatedButton(
             onPressed: () {
-              SuraPageNavigator.push(
+              SkadiNavigator.push(
                 context,
                 const CacheGlobalManager(),
               );

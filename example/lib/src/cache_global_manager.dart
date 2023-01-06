@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
-import 'package:sura_flutter/sura_flutter.dart';
+import 'package:skadi/skadi.dart';
 
 final FutureManager<int> globalManager = FutureManager(
   cacheOption: const ManagerCacheOption(
@@ -22,7 +22,7 @@ class _CacheGlobalManagerState extends State<CacheGlobalManager> {
   void initState() {
     globalManager.execute(
       () async {
-        await SuraUtils.wait(2000);
+        await SkadiUtils.wait(2000);
         return Random().nextInt(999);
       },
     );

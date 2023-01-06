@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
-import 'package:sura_flutter/sura_flutter.dart';
+import 'package:skadi/skadi.dart';
 
 class SuraManagerWithPagination extends StatefulWidget {
   final FutureManager<int> dataManager;
@@ -74,7 +74,7 @@ class _SuraManagerWithPaginationState extends State<SuraManagerWithPagination> {
         futureManager: userManager,
         // onRefreshing: () => const RefreshProgressIndicator(),
         ready: (context, UserResponse response) {
-          return SuraPaginatedList(
+          return SkadiPaginatedListView(
             itemCount: response.users.length,
             hasMoreData: response.hasMoreData,
             padding: EdgeInsets.zero,
@@ -92,7 +92,7 @@ class _SuraManagerWithPaginationState extends State<SuraManagerWithPagination> {
               );
             },
             dataLoader: fetchData,
-            errorWidget: Column(
+            errorWidget: () => Column(
               children: [
                 Text(userManager.error.toString()),
                 IconButton(

@@ -83,6 +83,7 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   bool get hasData => _data != null;
   bool get hasError => _error != null;
   bool _disposed = false;
+  final bool _readyOnceChecked = false;
 
   //Cache option
   int? _lastCacheDuration;
@@ -90,19 +91,20 @@ class FutureManager<T extends Object> extends ChangeNotifier {
   ///Short method for FutureManagerBuilder
   Widget when({
     required Widget Function(T) ready,
+    void Function(T)? onReadyOnce,
     Widget? loading,
     Widget Function(FutureManagerError)? error,
   }) {
     return FutureManagerBuilder<T>(
       futureManager: this,
+      onReadyOnce: onReadyOnce,
       ready: (context, data) => ready(data),
       loading: loading,
       error: error,
     );
   }
 
-  ///Similar to [when] but Only listen and display [data].
-  ///Default to Display blank when there is [loading] and [error] But can still customize
+  ///Display nothing on `loading` and `error`
   Widget listen({
     required Widget Function(T) ready,
     Widget loading = const SizedBox(),
@@ -116,7 +118,7 @@ class FutureManager<T extends Object> extends ChangeNotifier {
     );
   }
 
-  ///Always build the child and listen
+  ///Always display child even `loading` or `error`
   Widget build(Widget Function(T?) builder) {
     return AnimatedBuilder(
       animation: this,
@@ -331,6 +333,13 @@ class FutureManager<T extends Object> extends ChangeNotifier {
       _notifyListeners(useMicrotask: useMicroTask);
     }
   }
+
+  // void readyOnceListener(void Function(T) callback) {
+  //   if (hasData && !_readyOnceChecked) {
+  //     _readyOnceChecked = true;
+  //     callback(data!);
+  //   }
+  // }
 
   @override
   String toString() {

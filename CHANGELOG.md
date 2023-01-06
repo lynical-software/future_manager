@@ -1,3 +1,7 @@
+## [1.2.0] - 6 January 2023
+
+- add `onReadyOnce` method to FutureManagerBuilder
+
 ## [1.1.0] - 15 November 2022
 
 - add `build` method to FutureManager

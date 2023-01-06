@@ -16,8 +16,11 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
   ///A callback function that call when [FutureManager] state is error
   final void Function(FutureManagerError)? onError;
 
-  ///A callback function that call when [FutureManager] state is error
+  ///A callback function that call when [FutureManager] state has data
   final void Function(T)? onData;
+
+  ///A callback function that call when [FutureManager] state has data once
+  final void Function(T)? onReadyOnce;
 
   ///A widget to show on top of this widget when refreshing
   final Widget Function()? onRefreshing;
@@ -35,15 +38,18 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
     this.onError,
     this.onRefreshing,
     this.onData,
+    this.onReadyOnce,
   }) : super(key: key);
   @override
-  _FutureManagerBuilderState createState() => _FutureManagerBuilderState<T>();
+  State<FutureManagerBuilder<T>> createState() =>
+      _FutureManagerBuilderState<T>();
 }
 
 class _FutureManagerBuilderState<T extends Object>
     extends State<FutureManagerBuilder<T>> {
   //
   FutureManagerProvider? managerProvider;
+  bool readyOnceChecked = false;
 
   //
   void managerListener() {
@@ -63,6 +69,10 @@ class _FutureManagerBuilderState<T extends Object>
         case ProcessState.ready:
           T? data = widget.futureManager.data;
           if (data != null) {
+            if (!readyOnceChecked && widget.onReadyOnce != null) {
+              readyOnceChecked = true;
+              widget.onReadyOnce?.call(data);
+            }
             widget.onData?.call(data);
           }
           break;
@@ -75,8 +85,16 @@ class _FutureManagerBuilderState<T extends Object>
     }
   }
 
+  void checkOnReadyOnce() {
+    if (widget.futureManager.hasData && widget.onReadyOnce != null) {
+      readyOnceChecked = true;
+      widget.onReadyOnce?.call(widget.futureManager.data!);
+    }
+  }
+
   @override
   void initState() {
+    checkOnReadyOnce();
     widget.futureManager.addListener(managerListener);
     widget.futureManager.processingState.addListener(processStateListener);
     super.initState();
