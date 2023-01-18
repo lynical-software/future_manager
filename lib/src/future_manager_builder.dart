@@ -55,12 +55,7 @@ class _FutureManagerBuilderState<T extends Object>
   void managerListener() {
     if (mounted) {
       setState(() {});
-    }
-  }
-
-  void processStateListener() {
-    if (mounted) {
-      ProcessState state = widget.futureManager.processingState.value;
+      ProcessState state = widget.futureManager.value.processState;
       switch (state) {
         case ProcessState.idle:
           break;
@@ -77,9 +72,11 @@ class _FutureManagerBuilderState<T extends Object>
           }
           break;
         case ProcessState.error:
-          final error = widget.futureManager.error!;
-          widget.onError?.call(error);
-          managerProvider?.onFutureManagerError?.call(error, context);
+          final error = widget.futureManager.error;
+          if (error != null) {
+            widget.onError?.call(error);
+            managerProvider?.onFutureManagerError?.call(error, context);
+          }
           break;
       }
     }
@@ -96,14 +93,12 @@ class _FutureManagerBuilderState<T extends Object>
   void initState() {
     checkOnReadyOnce();
     widget.futureManager.addListener(managerListener);
-    widget.futureManager.processingState.addListener(processStateListener);
     super.initState();
   }
 
   @override
   void dispose() {
     widget.futureManager.removeListener(managerListener);
-    widget.futureManager.processingState.removeListener(processStateListener);
     super.dispose();
   }
 
@@ -112,10 +107,7 @@ class _FutureManagerBuilderState<T extends Object>
     super.didUpdateWidget(oldWidget);
     if (widget.futureManager != oldWidget.futureManager) {
       oldWidget.futureManager.removeListener(managerListener);
-      oldWidget.futureManager.processingState
-          .removeListener(processStateListener);
       widget.futureManager.addListener(managerListener);
-      widget.futureManager.processingState.addListener(processStateListener);
     }
   }
 
@@ -142,7 +134,7 @@ class _FutureManagerBuilderState<T extends Object>
   }
 
   Widget _buildWidgetByState() {
-    switch (widget.futureManager.viewState) {
+    switch (widget.futureManager.value.viewState) {
       case ViewState.loading:
         if (widget.loading != null) {
           return widget.loading!;

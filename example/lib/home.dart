@@ -45,6 +45,14 @@ class _MyHomePageState extends State<MyHomePage> {
         title: dataManager.build((data) {
           return Text("FutureManager example: ${data ?? ""}");
         }),
+        actions: [
+          IconButton(
+            onPressed: () {
+              dataManager.refresh(reloading: false);
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ),
       body: FutureManagerBuilder<int>(
         futureManager: dataManager,
@@ -71,8 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        onError: (err) {},
-        onData: (data) {},
+        onError: (err) {
+          errorLog("Manager has an error", err);
+        },
+        onData: (data) {
+          infoLog("Manager has a new data", data);
+        },
         ready: (context, data) {
           return Center(
             child: Column(
@@ -108,11 +120,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   key: const ValueKey("add-error"),
                   onPressed: () async {
-                    dataManager.addError(
-                        const FutureManagerError(exception: "exception"));
+                    dataManager.addError("My Exception");
                   },
                   child: const Text("Add error"),
                 ),
+                const SpaceY(24),
+                ElevatedButton(
+                  key: const ValueKey("add-error-soft"),
+                  onPressed: () async {
+                    dataManager.addError(
+                      "My Exception",
+                      updateViewState: false,
+                    );
+                  },
+                  child: const Text("Add error without Clear Data"),
+                ),
+                if (dataManager.hasError) Text(dataManager.error.toString()),
                 const SpaceY(24),
                 ElevatedButton(
                   key: const ValueKey("reset"),

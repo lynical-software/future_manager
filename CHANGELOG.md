@@ -1,3 +1,7 @@
+## [1.3.0] - 18 January 2023
+
+- Internal source code architecture changed, No Breaking change
+
 ## [1.2.0] - 6 January 2023
 
 - add `onReadyOnce` method to FutureManagerBuilder

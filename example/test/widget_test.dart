@@ -28,7 +28,7 @@ void main() {
     ///Refresh test
     await tester.tap(find.byKey(const ValueKey("refresh")));
     await tester.pump();
-    expect(manager.viewState, ViewState.loading);
+    expect(manager.value.viewState, ViewState.loading);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text("20"), findsNothing);
     await tester.pump(twoSecond);
@@ -42,18 +42,18 @@ void main() {
     //Tap refresh with no reloading
     await tester.tap(find.byKey(const ValueKey("refresh-no-reload")));
     await tester.pump();
-    expect(manager.viewState, ViewState.ready);
-    expect(manager.processingState.value, ProcessState.processing);
+    expect(manager.value.viewState, ViewState.ready);
+    expect(manager.value.processState, ProcessState.processing);
     expect(find.text("20"), findsOneWidget);
     expect(find.byType(RefreshProgressIndicator), findsOneWidget);
     await tester.pumpAndSettle(twoSecond);
     expect(find.text("10"), findsOneWidget);
-    expect(manager.processingState.value, ProcessState.ready);
+    expect(manager.value.processState, ProcessState.ready);
 
     //Add error test
     await tester.tap(find.byKey(const ValueKey("add-error")));
     await tester.pump();
-    expect(find.text("exception"), findsOneWidget);
+    expect(find.text("My Exception"), findsOneWidget);
     expect(manager.error != null, true);
     expect(manager.data == null, true);
     expect(manager.error!.exception.runtimeType, String);
@@ -65,6 +65,15 @@ void main() {
     expect(find.text("20"), findsNothing);
     await tester.pump(twoSecond);
     expect(find.text("10"), findsOneWidget);
+
+    //Add soft error
+    await tester.tap(find.byKey(const ValueKey("add-error-soft")));
+    await tester.pump();
+    expect(find.text("My Exception"), findsOneWidget);
+    expect(manager.error != null, true);
+    expect(manager.value.viewState == ViewState.ready, true);
+    expect(manager.data == null, false);
+    expect(manager.error!.exception.runtimeType, String);
 
     //Reset
     await tester.tap(find.byKey(const ValueKey("reset")));
