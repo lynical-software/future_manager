@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -72,7 +73,8 @@ class FutureManager<T extends Object>
   bool get hasData => data != null;
   bool get hasError => error != null;
   bool _disposed = false;
-  // final bool _readyOnceChecked = false;
+  //
+  final Queue<int> _builderHashCode = Queue();
 
   //Cache option
   int? _lastCacheDuration;
@@ -279,6 +281,20 @@ class FutureManager<T extends Object>
       if (_disposed) return;
       value = value.reset(updateViewState);
     });
+  }
+
+  void addCustomListener(VoidCallback listener, int builderHashCode) {
+    _builderHashCode.addFirst(builderHashCode);
+    super.addListener(listener);
+  }
+
+  void removeCustomListener(VoidCallback listener, int builderHashCode) {
+    _builderHashCode.remove(builderHashCode);
+    super.removeListener(listener);
+  }
+
+  bool canThisWidgetCallErrorListener(int hashCode) {
+    return _builderHashCode.first == hashCode;
   }
 
   @override

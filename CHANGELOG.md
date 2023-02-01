@@ -1,3 +1,7 @@
+## [1.4.0] - 1 February 2023
+
+- Fix multiple provider's errorListener being called on multiple listener
+
 ## [1.3.0] - 18 January 2023
 
 - Internal source code architecture changed, No Breaking change

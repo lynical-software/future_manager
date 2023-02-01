@@ -3,6 +3,7 @@ import 'package:future_manager/future_manager.dart';
 import 'package:skadi/skadi.dart';
 
 import 'src/cache_global_manager.dart';
+import 'src/multiple_listener.dart';
 import 'src/test_manager_provider.dart';
 import 'src/test_pagination.dart';
 
@@ -42,8 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //Use with FutureManagerBuilder
     return Scaffold(
       appBar: AppBar(
-        title: dataManager.build((data) {
-          return Text("FutureManager example: ${data ?? ""}");
+        title: dataManager.listen(ready: (data) {
+          return Text("FutureManager example: $data");
         }),
         actions: [
           IconButton(
@@ -151,6 +152,16 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          ElevatedButton(
+            onPressed: () {
+              SkadiNavigator.push(
+                context,
+                const MultipleListenr(),
+              );
+            },
+            child: const Text("Multiple Listener"),
+          ),
+          const SpaceX(16),
           ElevatedButton(
             onPressed: () {
               SkadiNavigator.push(

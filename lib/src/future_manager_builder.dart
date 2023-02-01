@@ -50,6 +50,7 @@ class _FutureManagerBuilderState<T extends Object>
   //
   FutureManagerProvider? managerProvider;
   bool readyOnceChecked = false;
+  late int widgetHash = widget.hashCode;
 
   //
   void managerListener() {
@@ -75,7 +76,10 @@ class _FutureManagerBuilderState<T extends Object>
           final error = widget.futureManager.error;
           if (error != null) {
             widget.onError?.call(error);
-            managerProvider?.onFutureManagerError?.call(error, context);
+            if (widget.futureManager
+                .canThisWidgetCallErrorListener(widgetHash)) {
+              managerProvider?.onFutureManagerError?.call(error, context);
+            }
           }
           break;
       }
@@ -92,13 +96,13 @@ class _FutureManagerBuilderState<T extends Object>
   @override
   void initState() {
     checkOnReadyOnce();
-    widget.futureManager.addListener(managerListener);
+    widget.futureManager.addCustomListener(managerListener, widgetHash);
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.futureManager.removeListener(managerListener);
+    widget.futureManager.removeCustomListener(managerListener, widgetHash);
     super.dispose();
   }
 
@@ -106,8 +110,9 @@ class _FutureManagerBuilderState<T extends Object>
   void didUpdateWidget(covariant FutureManagerBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.futureManager != oldWidget.futureManager) {
-      oldWidget.futureManager.removeListener(managerListener);
-      widget.futureManager.addListener(managerListener);
+      oldWidget.futureManager
+          .removeCustomListener(managerListener, oldWidget.hashCode);
+      widget.futureManager.addCustomListener(managerListener, widgetHash);
     }
   }
 
