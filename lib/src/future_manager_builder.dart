@@ -11,22 +11,22 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
   final Widget? loading;
 
   ///A widget to show when [FutureManager] state is error
-  final Widget Function(FutureManagerError)? error;
+  final Widget Function(FutureManagerError error)? error;
 
   ///A callback function that call when [FutureManager] state is error
-  final void Function(FutureManagerError)? onError;
+  final void Function(FutureManagerError error)? onError;
 
   ///A callback function that call when [FutureManager] state has data
-  final void Function(T)? onData;
+  final void Function(T data)? onData;
 
   ///A callback function that call when [FutureManager] state has data once
-  final void Function(T)? onReadyOnce;
+  final void Function(T data)? onReadyOnce;
 
   ///A widget to show on top of this widget when refreshing
   final Widget Function()? onRefreshing;
 
   ///A widget to show when [FutureManager] has a data
-  final Widget Function(BuildContext, T) ready;
+  final Widget Function(BuildContext context, T data) ready;
 
   // A widget that build base on the state a [FutureManager]
   const FutureManagerBuilder({
@@ -77,7 +77,8 @@ class _FutureManagerBuilderState<T extends Object>
           if (error != null) {
             widget.onError?.call(error);
             if (widget.futureManager
-                .canThisWidgetCallErrorListener(widgetHash)) {
+                    .canThisWidgetCallErrorListener(widgetHash) &&
+                widget.futureManager.reportError) {
               managerProvider?.onFutureManagerError?.call(error, context);
             }
           }

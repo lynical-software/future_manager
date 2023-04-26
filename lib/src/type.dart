@@ -4,13 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 typedef FutureFunction<T> = Future<T> Function();
-typedef SuccessCallBack<T> = FutureOr<T> Function(T);
-typedef ErrorCallBack = void Function(FutureManagerError);
-typedef ManagerProcessListener<T> = void Function(ProcessState, T?);
+typedef SuccessCallBack<T> = FutureOr<T> Function(T data);
+typedef ErrorCallBack = void Function(FutureManagerError error);
+typedef ManagerProcessListener<T> = void Function(ProcessState state, T? data);
 //
-typedef OnManagerError = void Function(FutureManagerError, BuildContext);
+typedef OnManagerError = void Function(
+    FutureManagerError error, BuildContext context);
 typedef ManagerErrorBuilder = Widget Function(
-    FutureManagerError, AsyncCallback?);
+    FutureManagerError error, AsyncCallback? onRefresh);
 
 Widget _emptyErrorFn(_) {
   return const SizedBox();

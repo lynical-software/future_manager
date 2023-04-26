@@ -1,3 +1,7 @@
+## [1.5.0] - 26 April 2023
+- Improve callback parameter naming convention
+- add `reportError` to `FutureManager`
+
 ## [1.4.0] - 1 February 2023
 
 - Fix multiple provider's errorListener being called on multiple listener

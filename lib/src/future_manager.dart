@@ -33,6 +33,9 @@ class FutureManager<T extends Object>
   /// default value is [false]
   final bool reloading;
 
+  /// if [reportError] is true, every time there's an error, We will call a manager error callback
+  final bool reportError;
+
   ///An option to cache Manager's data
   ///This is not a storage cache or memory cache.
   ///Data is cache within lifetime of FutureManager only
@@ -42,6 +45,7 @@ class FutureManager<T extends Object>
   FutureManager({
     this.futureFunction,
     this.reloading = true,
+    this.reportError = true,
     this.cacheOption = const ManagerCacheOption.non(),
     this.onSuccess,
     this.onDone,
@@ -81,10 +85,10 @@ class FutureManager<T extends Object>
 
   ///Short method for FutureManagerBuilder
   Widget when({
-    required Widget Function(T) ready,
-    void Function(T)? onReadyOnce,
+    required Widget Function(T data) ready,
+    void Function(T data)? onReadyOnce,
     Widget? loading,
-    Widget Function(FutureManagerError)? error,
+    Widget Function(FutureManagerError error)? error,
   }) {
     return FutureManagerBuilder<T>(
       futureManager: this,
@@ -97,9 +101,9 @@ class FutureManager<T extends Object>
 
   ///Display nothing on `loading` and `error`
   Widget listen({
-    required Widget Function(T) ready,
+    required Widget Function(T data) ready,
     Widget loading = const SizedBox(),
-    Widget Function(FutureManagerError) error = EmptyErrorFunction,
+    Widget Function(FutureManagerError error) error = EmptyErrorFunction,
   }) {
     return FutureManagerBuilder<T>(
       futureManager: this,
@@ -110,7 +114,7 @@ class FutureManager<T extends Object>
   }
 
   ///Always display child even `loading` or `error`
-  Widget build(Widget Function(T?) builder) {
+  Widget build(Widget Function(T? data) builder) {
     return AnimatedBuilder(
       animation: this,
       builder: (context, child) {
@@ -147,13 +151,14 @@ class FutureManager<T extends Object>
     bool throwError = false,
     bool useCache = true,
   }) async {
-    refresh = (
-        {reloading,
-        onSuccess,
-        onDone,
-        onError,
-        throwError = false,
-        useCache = false}) async {
+    refresh = ({
+      reloading,
+      onSuccess,
+      onDone,
+      onError,
+      throwError = false,
+      useCache = false,
+    }) async {
       bool shouldReload = reloading ?? this.reloading;
       SuccessCallBack<T>? successCallBack = onSuccess ?? this.onSuccess;
       ErrorCallBack? errorCallBack = onError ?? this.onError;
@@ -219,7 +224,7 @@ class FutureManager<T extends Object>
 
   ///Similar to [updateData] but provide current current [data] in Manager as param.
   ///return updated [data] result once completed.
-  Future<T?> modifyData(FutureOr<T> Function(T?) onChange) async {
+  Future<T?> modifyData(FutureOr<T> Function(T? data) onChange) async {
     T? data = await onChange(value.data);
     return updateData(data);
   }

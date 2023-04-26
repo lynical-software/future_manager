@@ -2,7 +2,7 @@
 
 ValueNotifier and ValueListenableBuilder but for asynchronous value.
 
-[![pub package](https://img.shields.io/badge/pub-1.4.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
+[![pub package](https://img.shields.io/badge/pub-1.5.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
 
 # Installation
 
@@ -10,7 +10,7 @@ Add this to pubspec.yaml
 
 ```dart
 dependencies:
-  future_manager: ^1.4.0
+  future_manager: ^1.5.0
 ```
 
 ### Use case and motivation:
@@ -146,6 +146,7 @@ class _HomePageState extends State<NewPage> {
 | error         | A widget show when [FutureManager] state is error                                      | Text(error.toString())    |
 | onError       | A callback function that call when [FutureManager] state is error                      | null                      |
 | onData        | A callback function that call when [FutureManager] state has a data or data is updated | null                      |
+| readyOnce     | a callback function that call only once when [FutureManager] receive a data            | null                      |
 | onRefreshing  | A widget to show on top of this widget when refreshing                                 | null                      |
 
 

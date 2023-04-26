@@ -31,6 +31,7 @@ class _ManagerConsumerState extends State<ManagerConsumer>
   }
 }
 
+///Consumer widget for ManagerProvider
 class ManagerConsumerBuilder extends ManagerConsumer {
   final Widget Function(BuildContext, ManagerRef) builder;
   const ManagerConsumerBuilder({Key? key, required this.builder})

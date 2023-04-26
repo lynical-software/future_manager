@@ -29,7 +29,9 @@ class FutureManagerValue<T> {
   }
 
   FutureManagerValue<T> addError(
-      FutureManagerError error, bool updateViewState) {
+    FutureManagerError error,
+    bool updateViewState,
+  ) {
     return FutureManagerValue<T>(
       error: error,
       processState: ProcessState.error,
