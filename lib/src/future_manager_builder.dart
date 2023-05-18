@@ -52,6 +52,9 @@ class _FutureManagerBuilderState<T extends Object>
   bool readyOnceChecked = false;
   late int widgetHash = widget.hashCode;
 
+  ///Create a delay build for one frame to enable manager state to ready
+  late Future<int> _delayFt;
+
   //
   void managerListener() {
     if (mounted) {
@@ -63,41 +66,47 @@ class _FutureManagerBuilderState<T extends Object>
         case ProcessState.processing:
           break;
         case ProcessState.ready:
-          T? data = widget.futureManager.data;
-          if (data != null) {
-            if (!readyOnceChecked && widget.onReadyOnce != null) {
-              readyOnceChecked = true;
-              widget.onReadyOnce?.call(data);
-            }
-            widget.onData?.call(data);
-          }
+          _handleReadyState();
           break;
         case ProcessState.error:
-          final error = widget.futureManager.error;
-          if (error != null) {
-            widget.onError?.call(error);
-            if (widget.futureManager
-                    .canThisWidgetCallErrorListener(widgetHash) &&
-                widget.futureManager.reportError) {
-              managerProvider?.onFutureManagerError?.call(error, context);
-            }
-          }
+          _handleErrorState();
           break;
       }
     }
   }
 
-  void checkOnReadyOnce() {
-    if (widget.futureManager.hasData && widget.onReadyOnce != null) {
+  void _handleErrorState() {
+    final error = widget.futureManager.error!;
+    widget.onError?.call(error);
+    if (widget.futureManager.canThisWidgetCallErrorListener(widgetHash) &&
+        widget.futureManager.reportError) {
+      managerProvider?.onFutureManagerError?.call(error, context);
+    }
+  }
+
+  void _handleReadyState() {
+    final data = widget.futureManager.data!;
+    if (widget.onReadyOnce != null && readyOnceChecked == false) {
       readyOnceChecked = true;
-      widget.onReadyOnce?.call(widget.futureManager.data!);
+      widget.onReadyOnce!.call(data);
+    }
+    widget.onData?.call(data);
+  }
+
+  void checkInitialStatus() {
+    if (widget.futureManager.hasData && widget.futureManager.data != null) {
+      _handleReadyState();
+    }
+    if (widget.futureManager.hasError && widget.futureManager.error != null) {
+      _handleErrorState();
     }
   }
 
   @override
   void initState() {
-    checkOnReadyOnce();
+    _delayFt = Future.microtask(() => 1);
     widget.futureManager.addCustomListener(managerListener, widgetHash);
+    Future.microtask(() => checkInitialStatus());
     super.initState();
   }
 
@@ -117,10 +126,23 @@ class _FutureManagerBuilderState<T extends Object>
     }
   }
 
+  late Widget loadingBuilder = managerProvider?.loadingBuilder?.call() ??
+      const Center(
+        child: CircularProgressIndicator(),
+      );
+
   @override
   Widget build(BuildContext context) {
     managerProvider = FutureManagerProvider.of(context);
-    final Widget managerWidget = _buildWidgetByState();
+    final Widget managerWidget = FutureBuilder<int>(
+      future: _delayFt,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _buildWidgetByState();
+        }
+        return loadingBuilder;
+      },
+    );
 
     if (widget.onRefreshing == null) {
       return managerWidget;
@@ -145,8 +167,7 @@ class _FutureManagerBuilderState<T extends Object>
         if (widget.loading != null) {
           return widget.loading!;
         }
-        return managerProvider?.loadingBuilder?.call() ??
-            const Center(child: CircularProgressIndicator());
+        return loadingBuilder;
 
       case ViewState.error:
         final error = widget.futureManager.error!;

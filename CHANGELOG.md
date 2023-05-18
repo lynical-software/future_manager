@@ -1,3 +1,7 @@
+## [1.6.0] - 18 May 2023
+- `FutureManagerBuilder` now delay listener for one frame to not build a existing data if reset is called
+- Fix `FutureManagerBuilder` onError isn't called on init state if FutureManager already has an error
+
 ## [1.5.0] - 26 April 2023
 - Improve callback parameter naming convention
 - add `reportError` to `FutureManager`
