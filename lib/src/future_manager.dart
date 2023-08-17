@@ -147,7 +147,13 @@ class FutureManager<T extends Object>
     bool? reloading,
     SuccessCallBack<T>? onSuccess,
     VoidCallback? onDone,
+
+    ///A callback called after exception is caught
+    ///You can return `FutureManagerError` to override existing error
+    ///Or return `false` to ignore the error and keep the current state
     ErrorCallBack? onError,
+
+    ///Throw error instead of catching it
     bool throwError = false,
     bool useCache = true,
   }) async {
@@ -183,16 +189,24 @@ class FutureManager<T extends Object>
         updateData(result);
         return result;
       } catch (exception, stackTrace) {
-        FutureManagerError error = FutureManagerError(
+        var error = FutureManagerError(
           exception: exception,
           stackTrace: stackTrace,
         );
 
-        ///Only update viewState if [triggerError] is true
-        addError(error, updateViewState: triggerError);
-        errorCallBack?.call(error);
-        if (shouldThrowError) {
-          rethrow;
+        var errorCallbackResult = await errorCallBack?.call(error);
+
+        if (errorCallbackResult is FutureManagerError) {
+          error = errorCallbackResult;
+        }
+
+        ///Only add error if result isn't false
+        if (errorCallbackResult != false) {
+          ///Only update viewState if [triggerError] is true
+          addError(error, updateViewState: triggerError);
+          if (shouldThrowError) {
+            rethrow;
+          }
         }
         return null;
       } finally {

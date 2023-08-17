@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 typedef FutureFunction<T> = Future<T> Function();
 typedef SuccessCallBack<T> = FutureOr<T> Function(T data);
-typedef ErrorCallBack = void Function(FutureManagerError error);
+typedef ErrorCallBack = FutureOr Function(FutureManagerError error);
 typedef ManagerProcessListener<T> = void Function(ProcessState state, T? data);
 //
 typedef OnManagerError = void Function(

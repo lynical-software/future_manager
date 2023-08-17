@@ -1,3 +1,6 @@
+## [1.7.0] - 17 Aug 2023
+- improve `onError` on FutureManager `execute` method: Allow error overriding
+
 ## [1.6.0] - 18 May 2023
 - `FutureManagerBuilder` now delay listener for one frame to not build a existing data if reset is called
 - Fix `FutureManagerBuilder` onError isn't called on init state if FutureManager already has an error
