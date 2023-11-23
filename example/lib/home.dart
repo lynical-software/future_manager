@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
 import 'package:skadi/skadi.dart';
 
-import 'src/cache_global_manager.dart';
+import 'src/global_manager.dart';
 import 'src/multiple_listener.dart';
-import 'src/test_manager_provider.dart';
+import 'src/provider_manager.dart';
 import 'src/test_pagination.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -184,9 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               SkadiNavigator.push(
                 context,
-                SuraManagerWithPagination(
-                  dataManager: dataManager,
-                ),
+                SuraManagerWithPagination(dataManager: dataManager),
               );
             },
             child: const Text("Pagination"),
@@ -194,22 +192,16 @@ class _MyHomePageState extends State<MyHomePage> {
           const SpaceX(16),
           ElevatedButton(
             onPressed: () {
-              SkadiNavigator.push(
-                context,
-                const TestManagerProvider(),
-              );
+              SkadiNavigator.push(context, const TestManagerProvider());
             },
             child: const Text("Provider"),
           ),
           const SpaceX(16),
           ElevatedButton(
             onPressed: () {
-              SkadiNavigator.push(
-                context,
-                const CacheGlobalManager(),
-              );
+              SkadiNavigator.push(context, const GlobalManager());
             },
-            child: const Text("Cache"),
+            child: const Text("Global"),
           ),
         ],
       ),

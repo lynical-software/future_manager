@@ -41,19 +41,18 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
     this.onReadyOnce,
   }) : super(key: key);
   @override
-  State<FutureManagerBuilder<T>> createState() =>
-      _FutureManagerBuilderState<T>();
+  State<FutureManagerBuilder<T>> createState() => _FutureManagerBuilderState<T>();
 }
 
-class _FutureManagerBuilderState<T extends Object>
-    extends State<FutureManagerBuilder<T>> {
+class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBuilder<T>> {
   //
-  FutureManagerProvider? managerProvider;
+  late FutureManagerProvider? managerProvider = FutureManagerProvider.of(context);
   bool readyOnceChecked = false;
   late int widgetHash = widget.hashCode;
 
   ///Create a delay build for one frame to enable manager state to ready
-  late Future<int> _delayFt;
+  ///Remove in 1.8.0
+  //late Future<int> _delayFt;
 
   //
   void managerListener() {
@@ -78,8 +77,7 @@ class _FutureManagerBuilderState<T extends Object>
   void _handleErrorState() {
     final error = widget.futureManager.error!;
     widget.onError?.call(error);
-    if (widget.futureManager.canThisWidgetCallErrorListener(widgetHash) &&
-        widget.futureManager.reportError) {
+    if (widget.futureManager.canThisWidgetCallErrorListener(widgetHash) && widget.futureManager.reportError) {
       managerProvider?.onFutureManagerError?.call(error, context);
     }
   }
@@ -104,9 +102,8 @@ class _FutureManagerBuilderState<T extends Object>
 
   @override
   void initState() {
-    _delayFt = Future.microtask(() => 1);
-    widget.futureManager.addCustomListener(managerListener, widgetHash);
     Future.microtask(() => checkInitialStatus());
+    widget.futureManager.addCustomListener(managerListener, widgetHash);
     super.initState();
   }
 
@@ -120,8 +117,7 @@ class _FutureManagerBuilderState<T extends Object>
   void didUpdateWidget(covariant FutureManagerBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.futureManager != oldWidget.futureManager) {
-      oldWidget.futureManager
-          .removeCustomListener(managerListener, oldWidget.hashCode);
+      oldWidget.futureManager.removeCustomListener(managerListener, oldWidget.hashCode);
       widget.futureManager.addCustomListener(managerListener, widgetHash);
     }
   }
@@ -133,16 +129,8 @@ class _FutureManagerBuilderState<T extends Object>
 
   @override
   Widget build(BuildContext context) {
-    managerProvider = FutureManagerProvider.of(context);
-    final Widget managerWidget = FutureBuilder<int>(
-      future: _delayFt,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return _buildWidgetByState();
-        }
-        return loadingBuilder;
-      },
-    );
+    //
+    final Widget managerWidget = _buildWidgetByState();
 
     if (widget.onRefreshing == null) {
       return managerWidget;
@@ -153,8 +141,7 @@ class _FutureManagerBuilderState<T extends Object>
       alignment: Alignment.topCenter,
       children: [
         managerWidget,
-        if (widget.futureManager.isRefreshing &&
-            widget.onRefreshing != null) ...[
+        if (widget.futureManager.isRefreshing && widget.onRefreshing != null) ...[
           widget.onRefreshing!.call(),
         ],
       ],

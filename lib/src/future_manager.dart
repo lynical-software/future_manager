@@ -14,8 +14,7 @@ import 'type.dart';
 ///[FutureManager] use [FutureManagerBuilder] instead of FutureBuilder to handle data
 ///
 ///[FutureManager] provide a method [execute] to handle or call async function
-class FutureManager<T extends Object>
-    extends ValueNotifier<FutureManagerValue<T>> {
+class FutureManager<T extends Object> extends ValueNotifier<FutureManagerValue<T>> {
   ///A future function that return the type of T
   final FutureFunction<T>? futureFunction;
 
@@ -71,8 +70,7 @@ class FutureManager<T extends Object>
   FutureManagerError? get error => value.error;
 
   //A field for checking state of Manager
-  bool get isRefreshing =>
-      hasDataOrError && value.processState == ProcessState.processing;
+  bool get isRefreshing => hasDataOrError && value.processState == ProcessState.processing;
   bool get hasDataOrError => (hasData || hasError);
   bool get hasData => data != null;
   bool get hasError => error != null;
@@ -135,8 +133,7 @@ class FutureManager<T extends Object>
     bool useCache,
   }) refresh = _emptyRefreshFunction;
 
-  Future<T?> _emptyRefreshFunction(
-      {reloading, onSuccess, onDone, onError, throwError, useCache}) async {
+  Future<T?> _emptyRefreshFunction({reloading, onSuccess, onDone, onError, throwError, useCache}) async {
     log("refresh() is depend on execute(),"
         " You need to call execute() once before you can call refresh()");
     return null;
@@ -228,8 +225,7 @@ class FutureManager<T extends Object>
 
     bool lastCacheIsExpired() {
       int now = DateTime.now().millisecondsSinceEpoch;
-      int expiredTime =
-          _lastCacheDuration! + cacheOption.cacheTime.inMilliseconds;
+      int expiredTime = _lastCacheDuration! + cacheOption.cacheTime.inMilliseconds;
       return now > expiredTime;
     }
 
@@ -282,9 +278,7 @@ class FutureManager<T extends Object>
     bool updateViewState = true,
     bool useMicrotask = false,
   }) {
-    FutureManagerError err = error is! FutureManagerError
-        ? FutureManagerError(exception: error)
-        : error;
+    FutureManagerError err = error is! FutureManagerError ? FutureManagerError(exception: error) : error;
     if (_disposed) return;
     if (useMicrotask) {
       Future.microtask(() => value = value.addError(err, updateViewState));
@@ -321,8 +315,7 @@ class FutureManager<T extends Object>
     String logContent =
         "Data: $data, Error: $error, ViewState: ${value.viewState}, ProcessState: ${value.processState}";
     if (_lastCacheDuration != null) {
-      logContent +=
-          ", cacheDuration: ${DateTime.fromMillisecondsSinceEpoch(_lastCacheDuration!)}";
+      logContent += ", cacheDuration: ${DateTime.fromMillisecondsSinceEpoch(_lastCacheDuration!)}";
     }
     return logContent;
   }
