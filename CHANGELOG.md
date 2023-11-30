@@ -1,11 +1,14 @@
+## [1.8.1] - 30 Nov 2023
+- Revert 1.8.0: `FutureManagerBuilder` now delay builder for one frame to not build a existing data if reset is called
+
 ## [1.8.0] - 30 Nov 2023
-- Revert 1.6.0: `FutureManagerBuilder` now `DO NOT` delay listener for one frame. New workaround improvement
+- Revert 1.6.0: `FutureManagerBuilder` now `DO NOT` delay builder for one frame. New workaround improvement
 
 ## [1.7.0] - 17 Aug 2023
 - improve `onError` on FutureManager `execute` method: Allow error overriding
 
 ## [1.6.0] - 18 May 2023
-- `FutureManagerBuilder` now delay listener for one frame to not build a existing data if reset is called
+- `FutureManagerBuilder` now delay builder for one frame to not build a existing data if reset is called
 - Fix `FutureManagerBuilder` onError isn't called on init state if FutureManager already has an error
 
 ## [1.5.0] - 26 April 2023

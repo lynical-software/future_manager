@@ -77,6 +77,12 @@ class FutureManager<T extends Object>
   bool get hasData => data != null;
   bool get hasError => error != null;
   bool _disposed = false;
+
+  ///
+  bool _reload = false;
+
+  ///Indicate if manager is doing reloading before view state or process state is updating
+  bool get preReload => _reload;
   //
   final Queue<int> _builderHashCode = Queue();
 
@@ -178,6 +184,7 @@ class FutureManager<T extends Object>
       bool triggerError = true;
       if (hasDataOrError) {
         triggerError = shouldReload;
+        _reload = shouldReload;
       }
       try {
         await resetData(updateViewState: shouldReload);
@@ -210,6 +217,7 @@ class FutureManager<T extends Object>
         }
         return null;
       } finally {
+        _reload = false;
         onOperationDone?.call();
       }
     };

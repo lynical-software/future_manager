@@ -25,7 +25,7 @@ class _GlobalManagerState extends State<GlobalManager> {
         await SkadiUtils.wait(1000);
         return Random().nextInt(999);
       },
-      reloading: true,
+      reloading: false,
     );
     globalManager.addListener(listener);
     super.initState();
@@ -55,6 +55,7 @@ class _GlobalManagerState extends State<GlobalManager> {
           debugLog("On err:", err);
         },
         ready: (context, data) {
+          debugLog("My data is built");
           return Center(
             child: Text("My data: $data"),
           );

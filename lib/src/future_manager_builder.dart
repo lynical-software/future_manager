@@ -53,9 +53,7 @@ class _FutureManagerBuilderState<T extends Object>
   bool readyOnceChecked = false;
   late int widgetHash = widget.hashCode;
 
-  ///Create a delay build for one frame to enable manager state to ready
-  ///Remove in 1.8.0
-  //late Future<int> _delayFt;
+  late Future<int> _delayFt;
 
   //
   void managerListener() {
@@ -109,6 +107,7 @@ class _FutureManagerBuilderState<T extends Object>
 
   @override
   void initState() {
+    _delayFt = Future.microtask(() => 1);
     Future.microtask(() => checkInitialStatus());
     widget.futureManager.addCustomListener(managerListener, widgetHash);
     super.initState();
@@ -138,7 +137,21 @@ class _FutureManagerBuilderState<T extends Object>
   @override
   Widget build(BuildContext context) {
     //
-    final Widget managerWidget = _buildWidgetByState();
+    Widget managerWidget;
+
+    if (widget.futureManager.preReload) {
+      managerWidget = FutureBuilder(
+        future: _delayFt,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _buildWidgetByState();
+          }
+          return loadingBuilder;
+        },
+      );
+    } else {
+      managerWidget = _buildWidgetByState();
+    }
 
     if (widget.onRefreshing == null) {
       return managerWidget;
