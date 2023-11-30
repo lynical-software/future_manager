@@ -41,12 +41,15 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
     this.onReadyOnce,
   }) : super(key: key);
   @override
-  State<FutureManagerBuilder<T>> createState() => _FutureManagerBuilderState<T>();
+  State<FutureManagerBuilder<T>> createState() =>
+      _FutureManagerBuilderState<T>();
 }
 
-class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBuilder<T>> {
+class _FutureManagerBuilderState<T extends Object>
+    extends State<FutureManagerBuilder<T>> {
   //
-  late FutureManagerProvider? managerProvider = FutureManagerProvider.of(context);
+  late FutureManagerProvider? managerProvider =
+      FutureManagerProvider.of(context);
   bool readyOnceChecked = false;
   late int widgetHash = widget.hashCode;
 
@@ -77,7 +80,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
   void _handleErrorState() {
     final error = widget.futureManager.error!;
     widget.onError?.call(error);
-    if (widget.futureManager.canThisWidgetCallErrorListener(widgetHash) && widget.futureManager.reportError) {
+    if (widget.futureManager.canThisWidgetCallErrorListener(widgetHash) &&
+        widget.futureManager.reportError) {
       managerProvider?.onFutureManagerError?.call(error, context);
     }
   }
@@ -92,6 +96,9 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
   }
 
   void checkInitialStatus() {
+    if (widget.futureManager.value.processState == ProcessState.processing) {
+      return;
+    }
     if (widget.futureManager.hasData && widget.futureManager.data != null) {
       _handleReadyState();
     }
@@ -117,7 +124,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
   void didUpdateWidget(covariant FutureManagerBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.futureManager != oldWidget.futureManager) {
-      oldWidget.futureManager.removeCustomListener(managerListener, oldWidget.hashCode);
+      oldWidget.futureManager
+          .removeCustomListener(managerListener, oldWidget.hashCode);
       widget.futureManager.addCustomListener(managerListener, widgetHash);
     }
   }
@@ -141,7 +149,8 @@ class _FutureManagerBuilderState<T extends Object> extends State<FutureManagerBu
       alignment: Alignment.topCenter,
       children: [
         managerWidget,
-        if (widget.futureManager.isRefreshing && widget.onRefreshing != null) ...[
+        if (widget.futureManager.isRefreshing &&
+            widget.onRefreshing != null) ...[
           widget.onRefreshing!.call(),
         ],
       ],

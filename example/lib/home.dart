@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ready: (context, data) {
           return Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   "$data",
@@ -167,8 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      floatingActionButton: Wrap(
         children: [
           ElevatedButton(
             onPressed: () {

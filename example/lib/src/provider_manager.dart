@@ -29,7 +29,8 @@ class TestManagerProvider extends StatefulWidget {
   State<TestManagerProvider> createState() => _TestManagerProviderState();
 }
 
-class _TestManagerProviderState extends State<TestManagerProvider> with ManagerProviderMixin {
+class _TestManagerProviderState extends State<TestManagerProvider>
+    with ManagerProviderMixin {
   late final manager = ref.read(provider(2));
   late final familyManager = ref.read(familyProvider("2"));
 

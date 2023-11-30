@@ -1,3 +1,6 @@
+## [1.8.0] - 30 Nov 2023
+- Revert 1.6.0: `FutureManagerBuilder` now `DO NOT` delay listener for one frame. New workaround improvement
+
 ## [1.7.0] - 17 Aug 2023
 - improve `onError` on FutureManager `execute` method: Allow error overriding
 

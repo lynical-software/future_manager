@@ -2,7 +2,7 @@
 
 ValueNotifier and ValueListenableBuilder but for asynchronous value.
 
-[![pub package](https://img.shields.io/badge/pub-1.7.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
+[![pub package](https://img.shields.io/badge/pub-1.8.0-blueviolet.svg)](https://pub.dev/packages/future_manager) ![Latest commit](https://badgen.net/github/last-commit/lynical-software/future_manager)
 
 # Installation
 
@@ -10,7 +10,7 @@ Add this to pubspec.yaml
 
 ```dart
 dependencies:
-  future_manager: ^1.7.0
+  future_manager: ^1.8.0
 ```
 
 ### Use case and motivation:

@@ -22,9 +22,10 @@ class _GlobalManagerState extends State<GlobalManager> {
   void initState() {
     globalManager.execute(
       () async {
-        await SkadiUtils.wait(2500);
+        await SkadiUtils.wait(1000);
         return Random().nextInt(999);
       },
+      reloading: true,
     );
     globalManager.addListener(listener);
     super.initState();
@@ -42,9 +43,18 @@ class _GlobalManagerState extends State<GlobalManager> {
       appBar: AppBar(
         title: const Text("Manager data Cache"),
       ),
-      body: globalManager.when(
-        onReadyOnce: (data) {},
-        ready: (data) {
+      body: FutureManagerBuilder(
+        futureManager: globalManager,
+        onReadyOnce: (data) {
+          debugLog("Ready once checked:", data);
+        },
+        onData: (data) {
+          debugLog("On data:", data);
+        },
+        onError: (err) {
+          debugLog("On err:", err);
+        },
+        ready: (context, data) {
           return Center(
             child: Text("My data: $data"),
           );
