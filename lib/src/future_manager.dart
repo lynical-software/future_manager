@@ -214,6 +214,8 @@ class FutureManager<T extends Object>
           if (shouldThrowError) {
             rethrow;
           }
+        } else if (hasData) {
+          updateData(data);
         }
         return null;
       } finally {
@@ -318,6 +320,16 @@ class FutureManager<T extends Object>
   void removeCustomListener(VoidCallback listener, int builderHashCode) {
     _builderHashCode.remove(builderHashCode);
     super.removeListener(listener);
+  }
+
+  ///Add a listener that return a remove listener function
+  VoidCallback eventListener(void Function(T? data) fn) {
+    void listener() {
+      fn.call(this.data);
+    }
+
+    super.addListener(listener);
+    return () => super.removeListener(listener);
   }
 
   bool canThisWidgetCallErrorListener(int hashCode) {

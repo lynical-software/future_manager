@@ -15,10 +15,23 @@ class _MultipleListenrState extends State<MultipleListenr> {
   bool switchWidget = true;
 
   bool switchAll = false;
+
+  VoidCallback? canceller;
+
   @override
   void initState() {
     futureManager.execute(() => Future.value(2));
+    canceller = futureManager.eventListener((data) {
+      infoLog("Event listener called: $data");
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    canceller?.call();
+    futureManager.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,19 +39,19 @@ class _MultipleListenrState extends State<MultipleListenr> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
+          ElevatedButton(
             onPressed: () {
               futureManager.addError("error occur");
             },
-            icon: const Icon(Icons.error),
+            child: const Text("Add error"),
           ),
-          IconButton(
+          ElevatedButton(
             onPressed: () {
               setState(() {
                 switchAll = !switchAll;
               });
             },
-            icon: const Icon(Icons.swipe),
+            child: const Text("Switch all"),
           ),
         ],
       ),
@@ -64,8 +77,8 @@ class _MultipleListenrState extends State<MultipleListenr> {
                 ),
               ],
             ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.swap_calls),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text("Disable one widget"),
         onPressed: () {
           setState(() {
             switchWidget = !switchWidget;

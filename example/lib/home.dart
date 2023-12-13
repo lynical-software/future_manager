@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
 import 'package:skadi/skadi.dart';
@@ -149,14 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   onPressed: () {
                     dataManager.execute(
-                      () => throw "Exception",
+                      () async {
+                        await SkadiUtils.wait();
+                        throw "Exception";
+                      },
+                      reloading: false,
                       onError: (error) {
-                        if (Random().nextBool()) {
-                          return false;
-                        }
-                        return const FutureManagerError(
-                          exception: "Override exception",
-                        );
+                        return false;
                       },
                     );
                   },

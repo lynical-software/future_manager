@@ -1,3 +1,6 @@
+## [1.9.0] - 13 Dec 2023
+- add `eventListener`
+
 ## [1.8.1] - 30 Nov 2023
 - Revert 1.8.0: `FutureManagerBuilder` now delay builder for one frame to not build a existing data if reset is called
 

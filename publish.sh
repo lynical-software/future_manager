@@ -1,6 +1,9 @@
 
 version=$1
 
+cd example
+flutter clean && flutter pub get
+cd ..
 flutter clean && flutter pub get
 dart format .
 git add .
