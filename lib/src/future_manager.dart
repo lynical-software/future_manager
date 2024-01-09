@@ -94,7 +94,8 @@ class FutureManager<T extends Object>
     required Widget Function(T data) ready,
     void Function(T data)? onReadyOnce,
     Widget? loading,
-    Widget Function(FutureManagerError error)? error,
+    ManagerErrorBuilder? error,
+    ManagerErrorListener? onError,
   }) {
     return FutureManagerBuilder<T>(
       futureManager: this,
@@ -102,6 +103,7 @@ class FutureManager<T extends Object>
       ready: (context, data) => ready(data),
       loading: loading,
       error: error,
+      onError: onError,
     );
   }
 

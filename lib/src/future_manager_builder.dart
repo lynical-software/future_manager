@@ -11,10 +11,10 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
   final Widget? loading;
 
   ///A widget to show when [FutureManager] state is error
-  final Widget Function(FutureManagerError error)? error;
+  final ManagerErrorBuilder? error;
 
   ///A callback function that call when [FutureManager] state is error
-  final void Function(FutureManagerError error)? onError;
+  final ManagerErrorListener? onError;
 
   ///A callback function that call when [FutureManager] state has data
   final void Function(T data)? onData;

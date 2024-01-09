@@ -8,9 +8,13 @@ typedef SuccessCallBack<T> = FutureOr<T> Function(T data);
 typedef ErrorCallBack = FutureOr Function(FutureManagerError error);
 typedef ManagerProcessListener<T> = void Function(ProcessState state, T? data);
 //
-typedef OnManagerError = void Function(
+
+typedef ManagerErrorListener = void Function(FutureManagerError error);
+typedef ManagerErrorBuilder = Widget Function(FutureManagerError error);
+//
+typedef ManagerErrorListenerProvider = void Function(
     FutureManagerError error, BuildContext context);
-typedef ManagerErrorBuilder = Widget Function(
+typedef ManagerErrorBuilderProvider = Widget Function(
     FutureManagerError error, AsyncCallback? onRefresh);
 
 Widget _emptyErrorFn(_) {

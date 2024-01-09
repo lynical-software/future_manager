@@ -1,3 +1,9 @@
+## [1.10.0] - 9 Jan 2024
+- add `onError` to `when` method on `FutureManager`
+
+## [1.9.0] - 13 Dec 2023
+- add `eventListener` to `FutureManager` to easily remove listener
+
 ## [1.9.0] - 13 Dec 2023
 - add `eventListener`
 

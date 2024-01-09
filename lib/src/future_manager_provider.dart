@@ -15,10 +15,10 @@ class FutureManagerProvider extends InheritedWidget {
   final Widget Function()? loadingBuilder;
 
   ///Error widget use in [Manager] builder class
-  final ManagerErrorBuilder? errorBuilder;
+  final ManagerErrorBuilderProvider? errorBuilder;
 
   ///A callback function that run if FutureManagerBuilder has an error
-  final OnManagerError? onFutureManagerError;
+  final ManagerErrorListenerProvider? onFutureManagerError;
 
   static FutureManagerProvider? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<FutureManagerProvider>();
