@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_manager/future_manager.dart';
+import 'package:future_manager_example/src/animated_manager.dart';
 import 'package:skadi/skadi.dart';
 
 import 'src/global_manager.dart';
@@ -166,6 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: Wrap(
         children: [
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (c) => const AnimatedManagerBottomSheet(),
+              );
+            },
+            child: const Text("Animated Manager"),
+          ),
+          const SpaceX(16),
           ElevatedButton(
             onPressed: () {
               SkadiNavigator.push(

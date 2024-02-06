@@ -1,3 +1,6 @@
+## [1.11.0] - 6 Feb 2024
+- add `customBuilder` to `FutureManager`
+
 ## [1.10.0] - 9 Jan 2024
 - add `onError` to `when` method on `FutureManager`
 

@@ -28,6 +28,9 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
   ///A widget to show when [FutureManager] has a data
   final Widget Function(BuildContext context, T data) ready;
 
+  ///Custom builder that mostly use from animation
+  final Widget Function(Widget child)? customBuilder;
+
   // A widget that build base on the state a [FutureManager]
   const FutureManagerBuilder({
     Key? key,
@@ -39,6 +42,7 @@ class FutureManagerBuilder<T extends Object> extends StatefulWidget {
     this.onRefreshing,
     this.onData,
     this.onReadyOnce,
+    this.customBuilder,
   }) : super(key: key);
   @override
   State<FutureManagerBuilder<T>> createState() =>
@@ -171,30 +175,37 @@ class _FutureManagerBuilderState<T extends Object>
   }
 
   Widget _buildWidgetByState() {
-    switch (widget.futureManager.value.viewState) {
-      case ViewState.loading:
-        if (widget.loading != null) {
-          return widget.loading!;
-        }
-        return loadingBuilder;
+    Widget child = () {
+      switch (widget.futureManager.value.viewState) {
+        case ViewState.loading:
+          if (widget.loading != null) {
+            return widget.loading!;
+          }
+          return loadingBuilder;
 
-      case ViewState.error:
-        final error = widget.futureManager.error!;
-        if (widget.error != null) {
-          return widget.error!.call(error);
-        }
-        return managerProvider?.errorBuilder?.call(
-              error,
-              widget.futureManager.refresh,
-            ) ??
-            Center(
-              child: Text(
-                error.toString(),
-                textAlign: TextAlign.center,
-              ),
-            );
-      case ViewState.ready:
-        return widget.ready(context, widget.futureManager.data!);
+        case ViewState.error:
+          final error = widget.futureManager.error!;
+          if (widget.error != null) {
+            return widget.error!.call(error);
+          }
+          return managerProvider?.errorBuilder?.call(
+                error,
+                widget.futureManager.refresh,
+              ) ??
+              Center(
+                child: Text(
+                  error.toString(),
+                  textAlign: TextAlign.center,
+                ),
+              );
+        case ViewState.ready:
+          return widget.ready(context, widget.futureManager.data!);
+      }
+    }();
+
+    if (widget.customBuilder != null) {
+      return widget.customBuilder!(child);
     }
+    return child;
   }
 }
